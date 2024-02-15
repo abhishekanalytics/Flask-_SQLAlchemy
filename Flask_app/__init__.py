@@ -1,18 +1,16 @@
-
-from flask import Flask
+from flask import Flask 
 from flask_sqlalchemy import SQLAlchemy
-from .config import Config
-from flask_migrate import Migrate
+ 
 
-app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-from .views.user_views import user_views
-
-app.register_blueprint(user_views)
+def create_app(config_filename):
+    app = Flask(__name__)
+    app.config.from_pyfile(config_filename)
+    
+    db = SQLAlchemy(app)
 
 
 
 
+    from .views.user_views import admin
+    app.register_blueprint(admin)
+    return app
