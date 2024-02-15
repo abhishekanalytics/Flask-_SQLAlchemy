@@ -8,9 +8,6 @@ def create_app(config_filename):
     
     db = SQLAlchemy(app)
 
-
-
-
-    from .views.user_views import admin
+    from .views.user import admin
     app.register_blueprint(admin)
     return app
