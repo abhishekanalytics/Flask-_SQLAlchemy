@@ -12,4 +12,5 @@ class User(db.Model):
     firstname=Column(String(20),nullable=False)
     lastname=Column(String(20),nullable=False)
     mobile_number=Column(String(20),nullable=False)
+    h_password = Column('password', String(350), nullable=False)
     age = db.Column(db.Integer)
