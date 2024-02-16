@@ -5,6 +5,7 @@ class User(db.Model):
 
     __tablename__ = "Users"
 
+
     id= Column(Integer,primary_key=True)
     email=Column(String(300),nullable=False)
     username=Column(String(300),nullable=False)
