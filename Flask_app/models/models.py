@@ -1,10 +1,20 @@
-from sqlalchemy import Column , Integer , String 
+from sqlalchemy import Column , Integer , String ,Date
 from Flask_app import db
 from sqlalchemy.ext.hybrid import hybrid_property
+from enum import Enum
+
+
 from werkzeug.security import(
     generate_password_hash,
     check_password_hash
     )
+
+
+
+class user_role(Enum):
+    EMPLOYEE="employee"
+    MANAGER="manager"
+    ADMIN="admin"
 
 
 class User(db.Model):
@@ -19,7 +29,9 @@ class User(db.Model):
     lastname=Column(String(20),nullable=False)
     mobile_number=Column(String(20),nullable=False)
     hash_password = Column('password', String(350), nullable=False)
-    age = db.Column(db.Integer)
+    date_of_birth = Column(Date, nullable=True)
+    role = Column(db.Enum(user_role), nullable=False)
+
     
     @hybrid_property
     def password(self):
