@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from Flask_app.config import config
+from .config import config
 
 db = SQLAlchemy()
 
@@ -15,8 +15,8 @@ def create_app(config_name):
 
     db.init_app(app)
 
-    from .views.user import bp
-    app.register_blueprint(bp)
+    from .views.user import user_bp
+    app.register_blueprint(user_bp)
 
     return app
 

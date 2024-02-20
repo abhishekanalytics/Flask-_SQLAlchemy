@@ -1,7 +1,8 @@
 from sqlalchemy import Column , Integer , String ,Date
-from Flask_app import db
+from .import db
 from sqlalchemy.ext.hybrid import hybrid_property
 from enum import Enum
+from datetime import date, timedelta
 
 
 from werkzeug.security import(
@@ -11,7 +12,7 @@ from werkzeug.security import(
 
 
 
-class user_role(Enum):
+class UserRole(Enum):
     EMPLOYEE="employee"
     MANAGER="manager"
     ADMIN="admin"
@@ -30,8 +31,16 @@ class User(db.Model):
     mobile_number=Column(String(20),nullable=False)
     hash_password = Column('password', String(350), nullable=False)
     date_of_birth = Column(Date, nullable=True)
-    role = Column(db.Enum(user_role), nullable=False)
+    role = Column(db.Enum(UserRole), nullable=False)
 
+
+    @property
+    def age(self):
+        if self.date_of_birth:
+            today = date.today()
+            age = (today - self.date_of_birth) // timedelta(days=365.2425)
+            return age
+        return None
     
     @hybrid_property
     def password(self):
