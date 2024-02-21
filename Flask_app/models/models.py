@@ -44,21 +44,14 @@ class User(db.Model):
     
     @hybrid_property
     def password(self):
-        return self._password
+        return self.hash_password
 
     @password.setter
     def password(self, user_password):
-        self._password = generate_password_hash(user_password)
+        self.hash_password = generate_password_hash(user_password)
 
     def verify_password(self, user_password):
         return check_password_hash(self.hash_password, user_password)
 
     def __repr__(self) -> str:
         return '<User %r>' % self.email
-
-
-
-
-
-
-
