@@ -5,10 +5,19 @@ load_dotenv()
 
 
 class Config:
-
-    DATABASE_URI = os.getenv('DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
     SECRET_KEY = os.getenv('SECRET_KEY')
 
     @staticmethod
     def init_app(app):
       pass
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+    SESSION_COOKIE_SECURE = False
+    
+
+
+config = {
+    'development': DevelopmentConfig,
+}
