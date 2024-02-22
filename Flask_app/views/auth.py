@@ -29,7 +29,7 @@ class AuthView(MethodView):
             password = request.json.get("password")
             role = request.json.get("role")
             if not validate_email(email):
-                return jsonify(message="Invalid email format")                      
+                return jsonify(message="Invalid email format"),400                     
             try:
                 user = create_user(
                     model=self.model,
@@ -43,7 +43,7 @@ class AuthView(MethodView):
                 )
                 return jsonify(message="User register successfully")
             except IntegrityError:
-                return jsonify(message="User already exists")
+                return jsonify(message="User already exists"),400
 
         elif request.path == "/users/login":
             email = request.json.get("email" , None)
@@ -51,7 +51,7 @@ class AuthView(MethodView):
             user = get_user_by_email(email)
             if user and user.verify_password(password):
                 access_token = create_access_token(identity=user.id,expires_delta=timedelta(minutes=30.0))
-                return jsonify({ "token": access_token, "user_id": user.id})
+                return jsonify({ "token": access_token})
             else:   
                 return jsonify(message="Email or password doesn't match")
     @jwt_required()
