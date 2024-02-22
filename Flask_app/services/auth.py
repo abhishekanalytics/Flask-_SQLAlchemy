@@ -1,8 +1,7 @@
 from typing import Any
-import datetime , os
-
+import re
 from ..import db
-from ..models.models import UserRole, User
+from ..models.models import User
 
 
 def create_user(model: Any, 
@@ -30,3 +29,11 @@ def create_user(model: Any,
 def get_user_by_email(email):
     user = User.query.filter_by(email=email).first()
     return user
+
+
+def validate_email(email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    if re.match(pattern, email):
+        return True
+    else:
+        return False

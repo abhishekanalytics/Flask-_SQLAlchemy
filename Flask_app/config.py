@@ -14,7 +14,6 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SESSION_COOKIE_SECURE = False
     
 
 
