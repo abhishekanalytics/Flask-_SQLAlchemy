@@ -2,8 +2,9 @@ import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
 from .config import config
+from flask_jwt_extended import JWTManager
+from flask_login import LoginManager
 
 db = SQLAlchemy()
 
@@ -14,10 +15,14 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     db.init_app(app)
-
-    from .views.user import user_bp
+    jwt = JWTManager(app)
+    login_manager = LoginManager(app)
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.get(user_id)
+    from .models.models import User
+    from flask_app.routes.auth import user_bp
     app.register_blueprint(user_bp)
-
     return app
 
 
