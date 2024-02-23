@@ -1,6 +1,6 @@
 from flask_login import logout_user
 from datetime import timedelta
-from flask import request ,jsonify
+from flask import request,jsonify
 from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 from flask_app.models.models import User
@@ -43,7 +43,7 @@ class AuthView(MethodView):
                 )
                 return jsonify(message="User register successfully")
             except IntegrityError:
-                return jsonify(message="User already exists"),400
+                return jsonify(message="User already exists"),409
 
         elif request.path == "/users/login":
             email = request.json.get("email" , None)
@@ -51,9 +51,8 @@ class AuthView(MethodView):
             user = get_user_by_email(email)
             if user and user.verify_password(password):
                 access_token = create_access_token(identity=user.id,expires_delta=timedelta(minutes=30.0))
-                return jsonify({ "token": access_token})
-            else:   
-                return jsonify(message="Email or password doesn't match")
+                return jsonify({ "token": access_token}),200
+            return jsonify(message="Email or password doesn't match"),400
     @jwt_required()
     def get(self):
         if request.path == "/users/logout":
