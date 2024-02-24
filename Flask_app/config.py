@@ -9,7 +9,6 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS') 
     SECRET_KEY = os.getenv('SECRET_KEY')
 
-    print(SQLALCHEMY_TRACK_MODIFICATIONS)
     
     @staticmethod
     def init_app(app):
