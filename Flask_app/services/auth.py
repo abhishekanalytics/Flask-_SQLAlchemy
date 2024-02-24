@@ -13,7 +13,7 @@ def create_user(model: Any,
                 lastname:str,
                 mobile_number:str,
                 ):
-    
+       
     user = model(
         username = username,
         email = email,
@@ -35,3 +35,4 @@ def validate_email(email):
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     if re.match(pattern, email):
         return True
+    
