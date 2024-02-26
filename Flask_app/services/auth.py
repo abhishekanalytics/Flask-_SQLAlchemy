@@ -11,7 +11,7 @@ def create_user(model: Any,
                 role: str,
                 firstname:str,
                 lastname:str,
-                mobile_number:str,
+                mobile_number:int,
                 ): 
     user = model(
         username = username,

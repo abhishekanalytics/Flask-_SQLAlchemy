@@ -29,7 +29,7 @@ class User(db.Model):
     username=Column(String(300),nullable=False,unique=True)
     firstname=Column(String(20),nullable=False)
     lastname=Column(String(20),nullable=False)
-    mobile_number=Column(String(20),nullable=False)
+    mobile_number=Column(Integer,nullable=False)
     hash_password = Column('password', String(350), nullable=False)
     date_of_birth = Column(Date, nullable=True)
     role = Column(db.Enum(UserRole), nullable=False)
