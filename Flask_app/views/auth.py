@@ -15,12 +15,16 @@ from flask_app.services.auth import (
     )
 from flask_login import logout_user
 
+
+
 class AuthView(MethodView):
     def __init__(self, model: User = None) -> None:
         self.model = model
         
+
+        
     def post(self):
-        if request.path == "/users/register":
+        if request.path == "/auth/register":
             username = request.json.get("username")
             email = request.json.get("email")
             firstname = request.json.get("firstname")
@@ -28,6 +32,7 @@ class AuthView(MethodView):
             mobile_number = request.json.get("mobile_number")
             password = request.json.get("password")
             role = request.json.get("role")
+            
             if not validate_email(email):
                 return jsonify(message="Invalid email format"),400                     
             try:
@@ -45,17 +50,25 @@ class AuthView(MethodView):
             except IntegrityError:
                 return jsonify(message="User already exists"),409
 
-        elif request.path == "/users/login":
+
+
+        elif request.path == "/auth/login":
             email = request.json.get("email" , None)
             password = request.json.get("password" , None)
             user = get_user_by_email(email)
             if user and user.verify_password(password):
-                access_token = create_access_token(identity=user.id,expires_delta=timedelta(minutes=30.0))
+                access_token = create_access_token(
+                    identity=user.id,
+                    expires_delta=timedelta(minutes=30.0)
+                    )
                 return jsonify({ "token": access_token}),200
             return jsonify(message="Email or password doesn't match"),400
+        
+
+
     @jwt_required()
     def get(self):
-        if request.path == "/users/logout":
+        if request.path == "/auth/logout":
             logout_user()
             return jsonify(message='Logout successful')
            
