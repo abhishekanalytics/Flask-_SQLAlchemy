@@ -12,8 +12,7 @@ def create_user(model: Any,
                 firstname:str,
                 lastname:str,
                 mobile_number:str,
-                ):
-       
+                ): 
     user = model(
         username = username,
         email = email,
@@ -26,9 +25,13 @@ def create_user(model: Any,
     db.session.add(user)
     db.session.commit()
 
+
+
 def get_user_by_email(email):
     user = User.query.filter_by(email=email).first()
     return user
+
+
 
 
 def validate_email(email):

@@ -5,20 +5,29 @@ from flask_jwt_extended import JWTManager
 from flask_login import LoginManager
 from .config import config
 
+
+
 db = SQLAlchemy()
+
 
 def create_app(config_name):
     app = Flask(__name__)
     
+
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
-
     db.init_app(app)
+
+
     jwt = JWTManager(app)
+
+
     login_manager = LoginManager(app)
     @login_manager.user_loader
     def load_user(user_id):
         return User.get(user_id)
+      
+
       
     from .models.models import User
     from flask_app.routes.auth import auth_bp

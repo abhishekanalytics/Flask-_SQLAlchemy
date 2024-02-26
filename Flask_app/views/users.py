@@ -6,7 +6,7 @@ from flask_jwt_extended import (
     get_jwt_identity
     )
 from ..decorators.decorator import (
-    admin_required,
+    admin_required,manager_required
     )
 from flask_app.services.users import (
     get_all_users, 
@@ -25,9 +25,7 @@ class UserView(MethodView):
     def __init__(self, model: User = None) -> None:
         self.model = model
 
-
-
-    @admin_required   
+    @manager_required
     def get(self, id=None):
         if not id:
             users = get_all_users()
