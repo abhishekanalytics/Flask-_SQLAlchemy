@@ -28,13 +28,16 @@ def create_app(config_name):
     def load_user(user_id):
         return User.get(user_id)
       
-
-
     from .models.models import User
     from flask_app.routes.auth import auth_bp
     from flask_app.routes.users import user_bp
+    from flask_app.routes.tasks import task_bp
+    app.register_blueprint(task_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(auth_bp)
+
+    with app.app_context():
+     db.create_all()
     return app
 
 

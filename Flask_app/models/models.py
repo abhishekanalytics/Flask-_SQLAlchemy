@@ -1,4 +1,4 @@
-from sqlalchemy import Column , Integer , String ,Date
+from sqlalchemy import Column , Integer , String ,Date,ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
 from enum import Enum
 from datetime import date, timedelta
@@ -16,11 +16,16 @@ class UserRole(Enum):
     ADMIN="admin"
 
 
+class Status(Enum):
+    UNASSIGNED = "unassigned"
+    RUNNING = "running"
+    PENDING = "pending"
+    COMPLETED = "completed"
 
 
 class User(db.Model):
 
-    __tablename__ = "Users"
+    __tablename__ = "users"
 
 
 
@@ -33,8 +38,6 @@ class User(db.Model):
     hash_password = Column('password', String(350), nullable=False)
     date_of_birth = Column(Date, nullable=True)
     role = Column(db.Enum(UserRole), nullable=False)
-
-
     
     @property
     def age(self):
@@ -65,3 +68,16 @@ class User(db.Model):
 
     def __repr__(self) -> str:
         return '<User %r>' % self.email
+
+
+class Task(db.Model):
+    __tablename__ = 'tasks'
+
+    id = Column(Integer , primary_key=True, autoincrement=True)
+    title = Column(String(200) , nullable=False)
+    description = Column(String(600) , nullable=True)
+    status = Column(db.Enum(Status), nullable=False, default=Status.UNASSIGNED.value)
+
+    assigned_to = Column(Integer, ForeignKey('users.id'))
+
+
