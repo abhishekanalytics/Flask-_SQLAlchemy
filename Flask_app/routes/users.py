@@ -6,14 +6,12 @@ from ..views.users import UserView
 user_bp = Blueprint('user_bp', __name__, url_prefix='/users')
 
 
-
 user_bp.add_url_rule(
     rule='/user',
     view_func=UserView.as_view(
         "get_all_users"
     )
 )
-
 
 
 user_bp.add_url_rule(
