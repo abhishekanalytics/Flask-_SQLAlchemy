@@ -16,16 +16,14 @@ from flask_app.services.users import (
 )
 
 
-
 class UserView(MethodView):
-    decorators = [jwt_required()]
-
+    # decorators = [jwt_required()]
 
 
     def __init__(self, model: User = None) -> None:
         self.model = model
 
-    @manager_required
+    # @manager_required
     def get(self, id=None):
         if not id:
             users = get_all_users()
@@ -51,8 +49,7 @@ class UserView(MethodView):
             return jsonify({"user": user_data}) 
     
 
-
-    @admin_required
+    # @admin_required
     def patch(self, id):
         user = get_user_by_id(id)
         if not user:
@@ -62,8 +59,7 @@ class UserView(MethodView):
         return jsonify({"message": "User updated successfully"})
 
 
-
-    @admin_required
+    # @admin_required
     def delete(self,id):
         user = get_user_by_id(id)
         if not user:

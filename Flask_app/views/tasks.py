@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from flask.views import MethodView
 from flask_app.models.models import Task
+from flask_app.models.models import User
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import (
     jwt_required,
@@ -18,34 +19,40 @@ from flask_app.services.tasks import (
 )
 
 
-
 class TaskView(MethodView):
-    # decorators = [jwt_required()]
-
-
-
+    decorators = [jwt_required()]
+    
     def __init__(self, model: Task = None) -> None:
         self.model = model
-
-
-
-
-
+        
     def post(self):
-        title = request.json.get("title", None)
-        description = request.json.get("description", "")
-        if title is None:
-            return jsonify(message="Invalid title") , 400
+        data = request.json
+        title = data.get("title", None)
+        if title is None or len(title) < 3:
+            return jsonify(message="Invalid title. It should be mandatory and have a minimum length of 3 characters."), 400
+        description = data.get("description", "")
+        assigned_to = data.get("assigned_to", None)
+
+        if title is None or assigned_to is None:
+            return jsonify(message="Invalid title or assigned_to"), 400
+
         try:
+            user = User.query.get(assigned_to)
+
+            if user is None:
+                return jsonify(message="User not found"), 400
+
             task = create_task(
-                model = self.model,
-                title = title,
-                description = description
-                )
+                model=self.model,
+                title=title,
+                description=description,
+                user=user
+            )
+
             return jsonify(message="Task added successfully")
         except IntegrityError:
             return jsonify(message="The given id already exists")
-        
+   
 
     def get(self, id=None):
         if not id:
@@ -54,34 +61,37 @@ class TaskView(MethodView):
                 {
                     "id": task.id,
                     "title": task.title,
-                    "description":task.description,                   
-                    } 
-                    for task in tasks
-                ]
+                    "description": task.description,
+                } 
+                for task in tasks
+            ]
             return jsonify({"tasks": task_list})
         else:
             task = get_task_by_id(id)
-            if not task:
-                return jsonify({"message": "task not found"}), 404
+            if task is None:
+                return jsonify({"message": "Task not found"}), 404
+
             task_data = {
                 "id": task.id, 
                 "title": task.title,
-                  "description": task.description
-                }
-            return jsonify({"task": task_data}) 
-    
+                "description": task.description,
+            }
+            return jsonify({"task": task_data})
+
+
 
 
     def patch(self, id):
         task = get_task_by_id(id)
-        if not task:
-            return jsonify({"message": "Task not found"}), 404        
+        if task is None:
+            return jsonify({"message": "Task not found"}), 404
+
         new_data = request.json
         update_task(task, new_data) 
         return jsonify({"message": "Task updated successfully"})
 
-
-
+        
+ 
     def delete(self,id):
         task = get_task_by_id(id)
         if not task:

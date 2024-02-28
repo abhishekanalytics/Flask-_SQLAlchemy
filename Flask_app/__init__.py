@@ -6,22 +6,17 @@ from flask_login import LoginManager
 from .config import config
 from flask_migrate import Migrate
 
-
-
 db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app(config_name):
     app = Flask(__name__)
-    
-
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
 
     jwt = JWTManager(app)
-
 
     login_manager = LoginManager(app)
     @login_manager.user_loader
@@ -35,11 +30,7 @@ def create_app(config_name):
     app.register_blueprint(task_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(auth_bp)
-
-    with app.app_context():
-     db.create_all()
     return app
-
 
 config_name = os.getenv('CONFIG', 'default')
 app = create_app(config_name)
