@@ -3,7 +3,6 @@ from flask_app.models.models import User
 from flask_jwt_extended import get_jwt_identity
 
 
-
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -16,7 +15,6 @@ def admin_required(f):
     return decorated_function
 
 
-
 def manager_required(f):
    @wraps(f)
    def decorated_function(*args, **kwargs):
@@ -27,7 +25,6 @@ def manager_required(f):
        else:
            return {"error":"Unauthorized"}
    return decorated_function
-
 
 
 def employee_required(f):
